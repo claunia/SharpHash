@@ -20,6 +20,7 @@
 //  along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Reflection;
 
 namespace SharpHash
 {
@@ -27,7 +28,15 @@ namespace SharpHash
     {
         public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            object[] attributes = typeof(MainClass).Assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
+            string AssemblyTitle = ((AssemblyTitleAttribute) attributes[0]).Title;
+            attributes = typeof(MainClass).Assembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
+            Version AssemblyVersion = typeof(MainClass).Assembly.GetName().Version;
+            string AssemblyCopyright  = ((AssemblyCopyrightAttribute) attributes[0]).Copyright;
+
+            Console.WriteLine("{0} {1}", AssemblyTitle, AssemblyVersion);
+            Console.WriteLine("{0}", AssemblyCopyright);
+            Console.WriteLine();
         }
     }
 }
