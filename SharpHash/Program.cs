@@ -77,6 +77,10 @@ namespace SharpHash
             Checksums.Fletcher32Context fletcher32Context = new Checksums.Fletcher32Context();
             fletcher32Context.Init();
 
+            Console.WriteLine("Initializing Adler-32...");
+            Checksums.Adler32Context adler32Context = new Checksums.Adler32Context();
+            adler32Context.Init();
+
             Console.WriteLine("Initializing MD5...");
             Checksums.MD5Context md5Context = new Checksums.MD5Context();
             md5Context.Init();
@@ -120,6 +124,7 @@ namespace SharpHash
                     crc64Context.Update(dataBuffer);
                     fletcher16Context.Update(dataBuffer);
                     fletcher32Context.Update(dataBuffer);
+                    adler32Context.Update(dataBuffer);
                     md5Context.Update(dataBuffer);
                     ripemd160Context.Update(dataBuffer);
                     sha1Context.Update(dataBuffer);
@@ -137,6 +142,7 @@ namespace SharpHash
                 crc64Context.Update(dataBuffer);
                 fletcher16Context.Update(dataBuffer);
                 fletcher32Context.Update(dataBuffer);
+                adler32Context.Update(dataBuffer);
                 md5Context.Update(dataBuffer);
                 ripemd160Context.Update(dataBuffer);
                 sha1Context.Update(dataBuffer);
@@ -155,6 +161,7 @@ namespace SharpHash
                 crc64Context.Update(dataBuffer);
                 fletcher16Context.Update(dataBuffer);
                 fletcher32Context.Update(dataBuffer);
+                adler32Context.Update(dataBuffer);
                 md5Context.Update(dataBuffer);
                 ripemd160Context.Update(dataBuffer);
                 sha1Context.Update(dataBuffer);
@@ -169,6 +176,7 @@ namespace SharpHash
             byte[] crc64Hash = crc64Context.Final();
             byte[] fletcher16Hash = fletcher16Context.Final();
             byte[] fletcher32Hash = fletcher32Context.Final();
+            byte[] adler32Hash = adler32Context.Final();
             byte[] md5Hash = md5Context.Final();
             byte[] ripemd160Hash = ripemd160Context.Final();
             byte[] sha1Hash = sha1Context.Final();
@@ -183,6 +191,7 @@ namespace SharpHash
             Console.WriteLine("CRC64: {0}", stringify(crc64Hash));
             Console.WriteLine("Fletcher-16: {0}", stringify(fletcher16Hash));
             Console.WriteLine("Fletcher-32: {0}", stringify(fletcher32Hash));
+            Console.WriteLine("Adler-32: {0}", stringify(adler32Hash));
             Console.WriteLine("MD5: {0}", stringify(md5Hash));
             Console.WriteLine("RIPEMD160: {0}", stringify(ripemd160Hash));
             Console.WriteLine("SHA1: {0}", stringify(sha1Hash));
