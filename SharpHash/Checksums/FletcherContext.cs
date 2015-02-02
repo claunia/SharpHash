@@ -178,7 +178,7 @@ namespace SharpHash.Checksums
                 for (int i = 0; i < fileStream.Length; i+=2)
                 {
                     blockBytes = new byte[2];
-                    fileStream.Read(blockBytes, i, 2);
+                    fileStream.Read(blockBytes, 0, 2);
                     block = BigEndianBitConverter.ToUInt16(blockBytes, 0);
                     localSum1 = (UInt16)((localSum1 + block) % 0xFFFF);
                     localSum2 = (UInt16)((localSum2 + localSum1) % 0xFFFF);
@@ -189,16 +189,14 @@ namespace SharpHash.Checksums
                 for (int i = 0; i < fileStream.Length-1; i+=2)
                 {
                     blockBytes = new byte[2];
-                    fileStream.Read(blockBytes, i, 2);
+                    fileStream.Read(blockBytes, 0, 2);
                     block = BigEndianBitConverter.ToUInt16(blockBytes, 0);
                     localSum1 = (UInt16)((localSum1 + block) % 0xFFFF);
                     localSum2 = (UInt16)((localSum2 + localSum1) % 0xFFFF);
                 }
 
                 byte[] oddData = new byte[2];
-                blockBytes = new byte[1];
-                fileStream.Read(blockBytes, (int)(fileStream.Length-2), 1);
-                oddData[0] = blockBytes[0];
+                oddData[0] = (byte)fileStream.ReadByte();
                 oddData[1] = 0;
 
                 block = BigEndianBitConverter.ToUInt16(oddData, 0);
