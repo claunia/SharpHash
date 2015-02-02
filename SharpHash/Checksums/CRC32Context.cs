@@ -30,12 +30,8 @@ namespace SharpHash.Checksums
     /// </summary>
     public class CRC32Context
     {
-        //const UInt32 crc32Poly = 0xEDB88320;
-        //const UInt32 crc32Seed = 0xFFFFFFFF;
-
-        const UInt32 crc32Poly = 0xD8018001;
-        const UInt32 crc32Seed = 0x00000000;
-
+        const UInt32 crc32Poly = 0xEDB88320;
+        const UInt32 crc32Seed = 0xFFFFFFFF;
 
         UInt32[] table;
         UInt32 hashInt;
@@ -86,6 +82,7 @@ namespace SharpHash.Checksums
         public byte[] Final()
         {
             hashInt ^= crc32Seed;
+            BigEndianBitConverter.IsLittleEndian = BitConverter.IsLittleEndian;
             return BigEndianBitConverter.GetBytes(hashInt);
         }
 
@@ -97,6 +94,7 @@ namespace SharpHash.Checksums
             hashInt ^= crc32Seed;
             StringBuilder crc32Output = new StringBuilder();
 
+            BigEndianBitConverter.IsLittleEndian = BitConverter.IsLittleEndian;
             for (int i = 0; i < BigEndianBitConverter.GetBytes(hashInt).Length; i++)
             {
                 crc32Output.Append(BigEndianBitConverter.GetBytes(hashInt)[i].ToString("x2"));
@@ -144,6 +142,7 @@ namespace SharpHash.Checksums
             for (int i = 0; i < fileStream.Length; i++)
                 localhashInt = (localhashInt >> 8) ^ localTable[fileStream.ReadByte() ^ localhashInt & 0xff];
 
+            BigEndianBitConverter.IsLittleEndian = BitConverter.IsLittleEndian;
             hash = BitConverter.GetBytes(localhashInt);
 
             StringBuilder crc32Output = new StringBuilder();
@@ -197,6 +196,7 @@ namespace SharpHash.Checksums
             for (int i = 0; i < len; i++)
                 localhashInt = (localhashInt >> 8) ^ localTable[data[i] ^ localhashInt & 0xff];
 
+            BigEndianBitConverter.IsLittleEndian = BitConverter.IsLittleEndian;
             hash = BitConverter.GetBytes(localhashInt);
 
             StringBuilder crc32Output = new StringBuilder();
