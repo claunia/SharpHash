@@ -21,6 +21,7 @@
 
 using System.Text;
 using System.IO;
+using SHA3;
 
 namespace SharpHash.Checksums
 {
@@ -29,14 +30,14 @@ namespace SharpHash.Checksums
     /// </summary>
     public class SHA3Context
     {
-        SHA3.SHA3 _sha3Provider;
+        SHA3Unmanaged _sha3Provider;
 
         /// <summary>
         /// Initializes the SHA3 hash provider
         /// </summary>
         public void Init()
         {
-            _sha3Provider = SHA3.SHA3.Create();
+            _sha3Provider = new SHA3Unmanaged(512);;
         }
 
         /// <summary>
