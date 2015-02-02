@@ -101,9 +101,9 @@ namespace SharpHash
             Checksums.SHA512Context sha512Context = new Checksums.SHA512Context();
             sha512Context.Init();
 
-            Console.WriteLine("Initializing SHA3-512...");
-            Checksums.SHA3Context sha3Context = new Checksums.SHA3Context();
-            sha3Context.Init();
+//            Console.WriteLine("Initializing SHA3-512...");
+//            Checksums.SHA3Context sha3Context = new Checksums.SHA3Context();
+//            sha3Context.Init();
 
             if (fileStream.Length > bufferSize)
             {
@@ -126,7 +126,7 @@ namespace SharpHash
                     sha256Context.Update(dataBuffer);
                     sha384Context.Update(dataBuffer);
                     sha512Context.Update(dataBuffer);
-                    sha3Context.Update(dataBuffer);
+//                    sha3Context.Update(dataBuffer);
                 }
 
                 dataBuffer = new byte[remainder];
@@ -143,7 +143,7 @@ namespace SharpHash
                 sha256Context.Update(dataBuffer);
                 sha384Context.Update(dataBuffer);
                 sha512Context.Update(dataBuffer);
-                sha3Context.Update(dataBuffer);
+//                sha3Context.Update(dataBuffer);
             }
             else
             {
@@ -161,7 +161,7 @@ namespace SharpHash
                 sha256Context.Update(dataBuffer);
                 sha384Context.Update(dataBuffer);
                 sha512Context.Update(dataBuffer);
-                sha3Context.Update(dataBuffer);
+//                sha3Context.Update(dataBuffer);
             }
 
             byte[] crc16Hash = crc16Context.Final();
@@ -175,8 +175,9 @@ namespace SharpHash
             byte[] sha256Hash = sha256Context.Final();
             byte[] sha384Hash = sha384Context.Final();
             byte[] sha512Hash = sha512Context.Final();
-            byte[] sha3Hash = sha3Context.Final();
+//            byte[] sha3Hash = sha3Context.Final();
 
+            Console.WriteLine();
             Console.WriteLine("CRC16: {0}", stringify(crc16Hash));
             Console.WriteLine("CRC32: {0}", stringify(crc32Hash));
             Console.WriteLine("CRC64: {0}", stringify(crc64Hash));
@@ -188,7 +189,7 @@ namespace SharpHash
             Console.WriteLine("SHA2-256: {0}", stringify(sha256Hash));
             Console.WriteLine("SHA2-384: {0}", stringify(sha384Hash));
             Console.WriteLine("SHA2-512: {0}", stringify(sha512Hash));
-            Console.WriteLine("SHA3-512: {0}", stringify(sha3Hash));
+//            Console.WriteLine("SHA3-512: {0}", stringify(sha3Hash));
 
             fileStream.Close();
         }
