@@ -49,6 +49,7 @@
     <Compile Include="Checksums\SHA512Context.cs" />
     <Compile Include="BigEndianBitConverter.cs" />
     <Compile Include="Checksums\SHA3Context.cs" />
+    <Compile Include="Checksums\FletcherContext.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
