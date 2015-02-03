@@ -51,6 +51,7 @@
     <Compile Include="Checksums\SHA3Context.cs" />
     <Compile Include="Checksums\FletcherContext.cs" />
     <Compile Include="Checksums\Adler32Context.cs" />
+    <Compile Include="Checksums\SpamSumContext.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

@@ -109,6 +109,10 @@ namespace SharpHash
 //            Checksums.SHA3Context sha3Context = new Checksums.SHA3Context();
 //            sha3Context.Init();
 
+            Console.WriteLine("Initializing SpamSum...");
+            Checksums.SpamSumContext spamsumContext = new Checksums.SpamSumContext();
+            spamsumContext.Init();
+
             if (fileStream.Length > bufferSize)
             {
                 int offset;
@@ -132,6 +136,7 @@ namespace SharpHash
                     sha384Context.Update(dataBuffer);
                     sha512Context.Update(dataBuffer);
 //                    sha3Context.Update(dataBuffer);
+                    spamsumContext.Update(dataBuffer);
                 }
 
                 dataBuffer = new byte[remainder];
@@ -150,6 +155,7 @@ namespace SharpHash
                 sha384Context.Update(dataBuffer);
                 sha512Context.Update(dataBuffer);
 //                sha3Context.Update(dataBuffer);
+                spamsumContext.Update(dataBuffer);
             }
             else
             {
@@ -169,6 +175,7 @@ namespace SharpHash
                 sha384Context.Update(dataBuffer);
                 sha512Context.Update(dataBuffer);
 //                sha3Context.Update(dataBuffer);
+                spamsumContext.Update(dataBuffer);
             }
 
             byte[] crc16Hash = crc16Context.Final();
@@ -184,6 +191,7 @@ namespace SharpHash
             byte[] sha384Hash = sha384Context.Final();
             byte[] sha512Hash = sha512Context.Final();
 //            byte[] sha3Hash = sha3Context.Final();
+            string spamsumHash = spamsumContext.End();
 
             Console.WriteLine();
             Console.WriteLine("CRC16: {0}", stringify(crc16Hash));
@@ -199,6 +207,7 @@ namespace SharpHash
             Console.WriteLine("SHA2-384: {0}", stringify(sha384Hash));
             Console.WriteLine("SHA2-512: {0}", stringify(sha512Hash));
 //            Console.WriteLine("SHA3-512: {0}", stringify(sha3Hash));
+            Console.WriteLine("SpamSum: {0}", spamsumHash);
 
             fileStream.Close();
         }
