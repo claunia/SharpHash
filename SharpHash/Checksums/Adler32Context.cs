@@ -26,8 +26,8 @@ namespace SharpHash.Checksums
 {
     public class Adler32Context
     {
-        private UInt16 sum1, sum2;
-        private const UInt16 AdlerModule = 65521;
+        UInt16 sum1, sum2;
+        const UInt16 AdlerModule = 65521;
 
         /// <summary>
         /// Initializes the Adler-32 sums
@@ -134,7 +134,7 @@ namespace SharpHash.Checksums
         /// <param name="data">Data buffer.</param>
         /// <param name="len">Length of the data buffer to hash.</param>
         /// <param name="hash">Byte array of the hash value.</param>
-        public string Data(byte[] data, uint len, out byte[] hash)
+        public static string Data(byte[] data, uint len, out byte[] hash)
         {
             UInt16 localSum1, localSum2;
             UInt32 finalSum;
@@ -167,7 +167,7 @@ namespace SharpHash.Checksums
         /// </summary>
         /// <param name="data">Data buffer.</param>
         /// <param name="hash">Byte array of the hash value.</param>
-        public string Data(byte[] data, out byte[] hash)
+        public static string Data(byte[] data, out byte[] hash)
         {
             return Data(data, (uint)data.Length, out hash);
         }

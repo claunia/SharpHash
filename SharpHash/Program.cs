@@ -32,10 +32,10 @@ namespace SharpHash
         public static void Main(string[] args)
         {
             object[] attributes = typeof(MainClass).Assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
-            string AssemblyTitle = ((AssemblyTitleAttribute) attributes[0]).Title;
+            string AssemblyTitle = ((AssemblyTitleAttribute)attributes[0]).Title;
             attributes = typeof(MainClass).Assembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
             Version AssemblyVersion = typeof(MainClass).Assembly.GetName().Version;
-            string AssemblyCopyright  = ((AssemblyCopyrightAttribute) attributes[0]).Copyright;
+            string AssemblyCopyright = ((AssemblyCopyrightAttribute)attributes[0]).Copyright;
 
             Console.WriteLine("{0} {1}", AssemblyTitle, AssemblyVersion);
             Console.WriteLine("{0}", AssemblyCopyright);
@@ -47,7 +47,7 @@ namespace SharpHash
                 return;
             }
 
-            if(!File.Exists(args[0]))
+            if (!File.Exists(args[0]))
             {
                 Console.WriteLine("Specified file cannot be found.");
                 return;
@@ -55,11 +55,11 @@ namespace SharpHash
 
             FileStream fileStream = new FileStream(args[0], FileMode.Open, FileAccess.Read);
 
-            Int64 bufferSize = 131072;
-            byte[] dataBuffer = new byte[bufferSize];
+            const Int64 bufferSize = 131072;
+            byte[] dataBuffer;
 
             Console.WriteLine("Checking for magic's file executable in path");
-            bool thereIsMagic = false;
+            bool thereIsMagic;
 
             try
             {
@@ -276,7 +276,7 @@ namespace SharpHash
             fileStream.Close();
         }
 
-        private static string stringify(byte[] hash)
+        static string stringify(byte[] hash)
         {
             StringBuilder hashOutput = new StringBuilder();
 

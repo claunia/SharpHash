@@ -45,18 +45,21 @@ namespace SharpHash.Checksums
         const UInt32 SPAMSUM_LENGTH = 64;
         const UInt32 FUZZY_MAX_RESULT = (2 * SPAMSUM_LENGTH + 20);
         //"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-        readonly byte[] b64 = {0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48,
-                               0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50,
-                               0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58,
-                               0x59, 0x5A, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66,
-                               0x67, 0x68, 0x69, 0x6A, 0x6B, 0x6C, 0x6D, 0x6E,
-                               0x6F, 0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76,
-                               0x77, 0x78, 0x79, 0x7A, 0x30, 0x31, 0x32, 0x33,
-                               0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x2B, 0x2F};
+        readonly byte[] b64 =
+        {0x41, 0x42, 0x43, 0x44, 0x45, 0x46, 0x47, 0x48,
+            0x49, 0x4A, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50,
+            0x51, 0x52, 0x53, 0x54, 0x55, 0x56, 0x57, 0x58,
+            0x59, 0x5A, 0x61, 0x62, 0x63, 0x64, 0x65, 0x66,
+            0x67, 0x68, 0x69, 0x6A, 0x6B, 0x6C, 0x6D, 0x6E,
+            0x6F, 0x70, 0x71, 0x72, 0x73, 0x74, 0x75, 0x76,
+            0x77, 0x78, 0x79, 0x7A, 0x30, 0x31, 0x32, 0x33,
+            0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x2B, 0x2F
+        };
 
         struct roll_state
         {
-            public byte[] window; // ROLLING_WINDOW
+            public byte[] window;
+            // ROLLING_WINDOW
             public UInt32 h1;
             public UInt32 h2;
             public UInt32 h3;
@@ -72,7 +75,8 @@ namespace SharpHash.Checksums
         {
             public UInt32 h;
             public UInt32 halfh;
-            public byte[] digest; // SPAMSUM_LENGTH
+            public byte[] digest;
+            // SPAMSUM_LENGTH
             public byte halfdigest;
             public UInt32 dlen;
         }
@@ -81,7 +85,8 @@ namespace SharpHash.Checksums
         {
             public UInt32 bhstart;
             public UInt32 bhend;
-            public blockhash_context[] bh; //NUM_BLOCKHASHES
+            public blockhash_context[] bh;
+            //NUM_BLOCKHASHES
             public UInt64 total_size;
             public roll_state roll;
         }
@@ -101,7 +106,7 @@ namespace SharpHash.Checksums
         {
             self = new fuzzy_state();
             self.bh = new blockhash_context[NUM_BLOCKHASHES];
-            for(int i = 0; i < NUM_BLOCKHASHES; i++)
+            for (int i = 0; i < NUM_BLOCKHASHES; i++)
                 self.bh[i].digest = new byte[SPAMSUM_LENGTH];
 
             self.bhstart = 0;
@@ -227,14 +232,16 @@ namespace SharpHash.Checksums
                 /* We have hit a reset point. We now emit hashes which are
                  * based on all characters in the piece of the message between
                  * the last reset point and this one */
-                if (0 == self.bh[i].dlen) {
+                if (0 == self.bh[i].dlen)
+                {
                     /* Can only happen 30 times. */
                     /* First step for this blocksize. Clone next. */
                     fuzzy_try_fork_blockhash();
                 }
                 self.bh[i].digest[self.bh[i].dlen] = b64[self.bh[i].h % 64];
                 self.bh[i].halfdigest = b64[self.bh[i].halfh % 64];
-                if (self.bh[i].dlen < SPAMSUM_LENGTH - 1) {
+                if (self.bh[i].dlen < SPAMSUM_LENGTH - 1)
+                {
                     /* We can have a problem with the tail overflowing. The
                      * easiest way to cope with this is to only reset the
                      * normal hash if we have room for more characters in
@@ -243,11 +250,13 @@ namespace SharpHash.Checksums
                      * */
                     self.bh[i].digest[++(self.bh[i].dlen)] = 0;
                     self.bh[i].h = HASH_INIT;
-                    if (self.bh[i].dlen < SPAMSUM_LENGTH / 2) {
+                    if (self.bh[i].dlen < SPAMSUM_LENGTH / 2)
+                    {
                         self.bh[i].halfh = HASH_INIT;
                         self.bh[i].halfdigest = 0;
                     }
-                } else
+                }
+                else
                     fuzzy_try_reduce_blockhash();
             }
         }
@@ -283,15 +292,17 @@ namespace SharpHash.Checksums
             int remain = (int)(FUZZY_MAX_RESULT - 1); /* Exclude terminating '\0'. */
             result = new byte[FUZZY_MAX_RESULT];
             /* Verify that our elimination was not overeager. */
-            if(!(bi == 0 || (UInt64)SSDEEP_BS(bi) / 2 * SPAMSUM_LENGTH < self.total_size))
+            if (!(bi == 0 || (UInt64)SSDEEP_BS(bi) / 2 * SPAMSUM_LENGTH < self.total_size))
                 throw new Exception("Assertion failed");
 
             result_off = 0;
 
             /* Initial blocksize guess. */
-            while ((UInt64)SSDEEP_BS(bi) * SPAMSUM_LENGTH < self.total_size) {
+            while ((UInt64)SSDEEP_BS(bi) * SPAMSUM_LENGTH < self.total_size)
+            {
                 ++bi;
-                if (bi >= NUM_BLOCKHASHES) {
+                if (bi >= NUM_BLOCKHASHES)
+                {
                     throw new OverflowException("The input exceeds data types.");
                 }
             }
@@ -300,7 +311,7 @@ namespace SharpHash.Checksums
                 --bi;
             while (bi > self.bhstart && self.bh[bi].dlen < SPAMSUM_LENGTH / 2)
                 --bi;
-            if((bi > 0 && self.bh[bi].dlen < SPAMSUM_LENGTH / 2))
+            if ((bi > 0 && self.bh[bi].dlen < SPAMSUM_LENGTH / 2))
                 throw new Exception("Assertion failed");
 
             sb.AppendFormat("{0}:", SSDEEP_BS(bi));
@@ -328,21 +339,25 @@ namespace SharpHash.Checksums
                 if (remain <= 0)
                     throw new Exception("Assertion failed");
                 result[result_off] = b64[self.bh[bi].h % 64];
-                if(i < 3 ||
-                    result[result_off] != result[result_off-1] ||
-                    result[result_off] != result[result_off-2] ||
-                    result[result_off] != result[result_off-3]) {
+                if (i < 3 ||
+                   result[result_off] != result[result_off - 1] ||
+                   result[result_off] != result[result_off - 2] ||
+                   result[result_off] != result[result_off - 3])
+                {
                     ++result_off;
                     --remain;
                 }
-            } else if (self.bh[bi].digest[i] != 0) {
+            }
+            else if (self.bh[bi].digest[i] != 0)
+            {
                 if (remain <= 0)
                     throw new Exception("Assertion failed");
                 result[result_off] = self.bh[bi].digest[i];
-                if(i < 3 ||
-                    result[result_off] != result[result_off-1] ||
-                    result[result_off] != result[result_off-2] ||
-                    result[result_off] != result[result_off-3]) {
+                if (i < 3 ||
+                   result[result_off] != result[result_off - 1] ||
+                   result[result_off] != result[result_off - 2] ||
+                   result[result_off] != result[result_off - 3])
+                {
                     ++result_off;
                     --remain;
                 }
@@ -361,34 +376,41 @@ namespace SharpHash.Checksums
                 result_off += i;
                 remain -= i;
 
-                if (h != 0) {
+                if (h != 0)
+                {
                     if (remain <= 0)
                         throw new Exception("Assertion failed");
                     h = self.bh[bi].halfh;
                     result[result_off] = b64[h % 64];
-                    if(i < 3 ||
-                        result[result_off] != result[result_off-1] ||
-                        result[result_off] != result[result_off-2] ||
-                        result[result_off] != result[result_off-3]) {
+                    if (i < 3 ||
+                       result[result_off] != result[result_off - 1] ||
+                       result[result_off] != result[result_off - 2] ||
+                       result[result_off] != result[result_off - 3])
+                    {
                         ++result_off;
                         --remain;
                     }
-                } else {
+                }
+                else
+                {
                     i = self.bh[bi].halfdigest;
-                    if (i != 0) {
+                    if (i != 0)
+                    {
                         if (remain <= 0)
                             throw new Exception("Assertion failed");
                         result[result_off] = (byte)i;
-                        if(i < 3 ||
-                            result[result_off] != result[result_off-1] ||
-                            result[result_off] != result[result_off-2] ||
-                            result[result_off] != result[result_off-3]) {
+                        if (i < 3 ||
+                           result[result_off] != result[result_off - 1] ||
+                           result[result_off] != result[result_off - 2] ||
+                           result[result_off] != result[result_off - 3])
+                        {
                             ++result_off;
                             --remain;
                         }
                     }
                 }
-            } else if (h != 0)
+            }
+            else if (h != 0)
             {
                 if (self.bh[bi].dlen != 0)
                     throw new Exception("Assertion failed");
@@ -427,7 +449,7 @@ namespace SharpHash.Checksums
         /// Gets the hash of a file
         /// </summary>
         /// <param name="filename">File path.</param>
-        public byte[] File(string filename)
+        public static byte[] File(string filename)
         {
             // SpamSum does not have a binary representation, or so it seems
             throw new NotImplementedException("SpamSum does not have a binary representation.");
@@ -438,7 +460,7 @@ namespace SharpHash.Checksums
         /// </summary>
         /// <param name="filename">File path.</param>
         /// <param name="hash">Byte array of the hash value.</param>
-        public string File(string filename, out byte[] hash)
+        public static string File(string filename, out byte[] hash)
         {
             // SpamSum does not have a binary representation, or so it seems
             throw new NotImplementedException("Not yet implemented.");

@@ -26,9 +26,9 @@ namespace SharpHash.Checksums
 {
     public class Fletcher32Context
     {
-        private UInt16 sum1, sum2;
-        private byte oddValue;
-        private bool inodd;
+        UInt16 sum1, sum2;
+        byte oddValue;
+        bool inodd;
 
         /// <summary>
         /// Initializes the Fletcher32 sums
@@ -175,7 +175,7 @@ namespace SharpHash.Checksums
 
             if (fileStream.Length % 2 == 0)
             {
-                for (int i = 0; i < fileStream.Length; i+=2)
+                for (int i = 0; i < fileStream.Length; i += 2)
                 {
                     blockBytes = new byte[2];
                     fileStream.Read(blockBytes, 0, 2);
@@ -186,7 +186,7 @@ namespace SharpHash.Checksums
             }
             else
             {
-                for (int i = 0; i < fileStream.Length-1; i+=2)
+                for (int i = 0; i < fileStream.Length - 1; i += 2)
                 {
                     blockBytes = new byte[2];
                     fileStream.Read(blockBytes, 0, 2);
@@ -224,7 +224,7 @@ namespace SharpHash.Checksums
         /// <param name="data">Data buffer.</param>
         /// <param name="len">Length of the data buffer to hash.</param>
         /// <param name="hash">Byte array of the hash value.</param>
-        public string Data(byte[] data, uint len, out byte[] hash)
+        public static string Data(byte[] data, uint len, out byte[] hash)
         {
             UInt16 localSum1, localSum2, block;
             UInt32 finalSum;
@@ -235,7 +235,7 @@ namespace SharpHash.Checksums
 
             if (len % 2 == 0)
             {
-                for (int i = 0; i < len; i+=2)
+                for (int i = 0; i < len; i += 2)
                 {
                     block = BigEndianBitConverter.ToUInt16(data, i);
                     localSum1 = (UInt16)((localSum1 + block) % 0xFFFF);
@@ -244,7 +244,7 @@ namespace SharpHash.Checksums
             }
             else
             {
-                for (int i = 0; i < len-1; i+=2)
+                for (int i = 0; i < len - 1; i += 2)
                 {
                     block = BigEndianBitConverter.ToUInt16(data, i);
                     localSum1 = (UInt16)((localSum1 + block) % 0xFFFF);
@@ -279,7 +279,7 @@ namespace SharpHash.Checksums
         /// </summary>
         /// <param name="data">Data buffer.</param>
         /// <param name="hash">Byte array of the hash value.</param>
-        public string Data(byte[] data, out byte[] hash)
+        public static string Data(byte[] data, out byte[] hash)
         {
             return Data(data, (uint)data.Length, out hash);
         }
@@ -287,7 +287,7 @@ namespace SharpHash.Checksums
 
     public class Fletcher16Context
     {
-        private byte sum1, sum2;
+        byte sum1, sum2;
 
         /// <summary>
         /// Initializes the Fletcher16 sums
@@ -372,7 +372,7 @@ namespace SharpHash.Checksums
             localSum2 = 0xFF;
             block = 0;
 
-            for (int i = 0; i < fileStream.Length; i+=2)
+            for (int i = 0; i < fileStream.Length; i += 2)
             {
                 block = (byte)fileStream.ReadByte();
                 localSum1 = (byte)((localSum1 + block) % 0xFF);
@@ -399,7 +399,7 @@ namespace SharpHash.Checksums
         /// <param name="data">Data buffer.</param>
         /// <param name="len">Length of the data buffer to hash.</param>
         /// <param name="hash">Byte array of the hash value.</param>
-        public string Data(byte[] data, uint len, out byte[] hash)
+        public static string Data(byte[] data, uint len, out byte[] hash)
         {
             byte localSum1, localSum2;
             UInt16 finalSum;
@@ -432,7 +432,7 @@ namespace SharpHash.Checksums
         /// </summary>
         /// <param name="data">Data buffer.</param>
         /// <param name="hash">Byte array of the hash value.</param>
-        public string Data(byte[] data, out byte[] hash)
+        public static string Data(byte[] data, out byte[] hash)
         {
             return Data(data, (uint)data.Length, out hash);
         }

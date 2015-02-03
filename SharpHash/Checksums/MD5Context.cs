@@ -73,7 +73,7 @@ namespace SharpHash.Checksums
         /// </summary>
         public string End()
         {
-             _md5Provider.TransformFinalBlock(new byte[0], 0, 0);
+            _md5Provider.TransformFinalBlock(new byte[0], 0, 0);
             StringBuilder md5Output = new StringBuilder();
 
             for (int i = 0; i < _md5Provider.Hash.Length; i++)

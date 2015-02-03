@@ -37,7 +37,7 @@ namespace SharpHash.Checksums
         /// </summary>
         public void Init()
         {
-            _sha3Provider = new SHA3Unmanaged(512);;
+            _sha3Provider = new SHA3Unmanaged(512);
         }
 
         /// <summary>
