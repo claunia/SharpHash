@@ -68,5 +68,14 @@
   </ProjectExtensions>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="..\README.md">
+      <Link>README.md</Link>
+    </None>
+    <None Include="..\TODO">
+      <Link>TODO</Link>
+    </None>
+    <None Include="..\LICENSE">
+      <Link>LICENSE</Link>
+    </None>
   </ItemGroup>
 </Project>
