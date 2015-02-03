@@ -23,6 +23,7 @@ using System;
 using System.Reflection;
 using System.IO;
 using System.Text;
+using System.Diagnostics;
 
 namespace SharpHash
 {
@@ -56,6 +57,60 @@ namespace SharpHash
 
             Int64 bufferSize = 131072;
             byte[] dataBuffer = new byte[bufferSize];
+
+            Console.WriteLine("Checking for magic's file executable in path");
+            bool thereIsMagic = false;
+
+            try
+            {
+                Process p = new Process();
+                p.StartInfo.UseShellExecute = false;
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.RedirectStandardError = true;
+                p.StartInfo.FileName = "file";
+                p.Start();
+                p.StandardOutput.ReadToEnd();
+                p.WaitForExit();
+
+                thereIsMagic = true;
+                Console.WriteLine("magic's file found in path");
+            }
+            catch
+            {
+                thereIsMagic = false;
+                Console.WriteLine("magic's file not found in path");
+            }
+
+            string magic = "", applePair = "", mimeType = "", mimeEncoding = "";
+
+            if (thereIsMagic)
+            {
+                Process magicProcess = new Process();
+                magicProcess.StartInfo.UseShellExecute = false;
+                magicProcess.StartInfo.RedirectStandardOutput = true;
+                magicProcess.StartInfo.RedirectStandardError = true;
+                magicProcess.StartInfo.FileName = "file";
+
+                magicProcess.StartInfo.Arguments = "--brief --preserve-date " + args[0];
+                magicProcess.Start();
+                magic = magicProcess.StandardOutput.ReadToEnd();
+                magicProcess.WaitForExit();
+
+                magicProcess.StartInfo.Arguments = "--brief --preserve-date --apple " + args[0];
+                magicProcess.Start();
+                applePair = magicProcess.StandardOutput.ReadToEnd();
+                magicProcess.WaitForExit();
+
+                magicProcess.StartInfo.Arguments = "--brief --preserve-date --mime-type " + args[0];
+                magicProcess.Start();
+                mimeType = magicProcess.StandardOutput.ReadToEnd();
+                magicProcess.WaitForExit();
+
+                magicProcess.StartInfo.Arguments = "--brief --preserve-date --mime-encoding " + args[0];
+                magicProcess.Start();
+                mimeEncoding = magicProcess.StandardOutput.ReadToEnd();
+                magicProcess.WaitForExit();
+            }
 
             Console.WriteLine("Initializing CRC16...");
             Checksums.CRC16Context crc16Context = new Checksums.CRC16Context();
@@ -194,6 +249,15 @@ namespace SharpHash
             string spamsumHash = spamsumContext.End();
 
             Console.WriteLine();
+            Console.WriteLine();
+            if (thereIsMagic)
+            {
+                Console.Write("magic's Description = {0}", magic);
+                Console.Write("Apple OSType Pair = {0}", applePair);
+                Console.Write("MIME Type = {0}", mimeType);
+                Console.Write("MIME Encoding = {0}", mimeEncoding);
+                Console.WriteLine();
+            }
             Console.WriteLine("CRC16: {0}", stringify(crc16Hash));
             Console.WriteLine("CRC32: {0}", stringify(crc32Hash));
             Console.WriteLine("CRC64: {0}", stringify(crc64Hash));
