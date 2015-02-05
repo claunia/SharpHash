@@ -160,9 +160,9 @@ namespace SharpHash
             Checksums.SHA512Context sha512Context = new Checksums.SHA512Context();
             sha512Context.Init();
 
-//            Console.WriteLine("Initializing SHA3-512...");
-//            Checksums.SHA3Context sha3Context = new Checksums.SHA3Context();
-//            sha3Context.Init();
+            Console.WriteLine("Initializing SHA3-512...");
+            Checksums.SHA3Context sha3Context = new Checksums.SHA3Context();
+            sha3Context.Init();
 
             Console.WriteLine("Initializing SpamSum...");
             Checksums.SpamSumContext spamsumContext = new Checksums.SpamSumContext();
@@ -190,7 +190,7 @@ namespace SharpHash
                     sha256Context.Update(dataBuffer);
                     sha384Context.Update(dataBuffer);
                     sha512Context.Update(dataBuffer);
-//                    sha3Context.Update(dataBuffer);
+                    sha3Context.Update(dataBuffer);
                     spamsumContext.Update(dataBuffer);
                 }
 
@@ -209,7 +209,7 @@ namespace SharpHash
                 sha256Context.Update(dataBuffer);
                 sha384Context.Update(dataBuffer);
                 sha512Context.Update(dataBuffer);
-//                sha3Context.Update(dataBuffer);
+                sha3Context.Update(dataBuffer);
                 spamsumContext.Update(dataBuffer);
             }
             else
@@ -229,7 +229,7 @@ namespace SharpHash
                 sha256Context.Update(dataBuffer);
                 sha384Context.Update(dataBuffer);
                 sha512Context.Update(dataBuffer);
-//                sha3Context.Update(dataBuffer);
+                sha3Context.Update(dataBuffer);
                 spamsumContext.Update(dataBuffer);
             }
 
@@ -245,7 +245,7 @@ namespace SharpHash
             byte[] sha256Hash = sha256Context.Final();
             byte[] sha384Hash = sha384Context.Final();
             byte[] sha512Hash = sha512Context.Final();
-//            byte[] sha3Hash = sha3Context.Final();
+            byte[] sha3Hash = sha3Context.Final();
             string spamsumHash = spamsumContext.End();
 
             Console.WriteLine();
@@ -270,7 +270,7 @@ namespace SharpHash
             Console.WriteLine("SHA2-256: {0}", stringify(sha256Hash));
             Console.WriteLine("SHA2-384: {0}", stringify(sha384Hash));
             Console.WriteLine("SHA2-512: {0}", stringify(sha512Hash));
-//            Console.WriteLine("SHA3-512: {0}", stringify(sha3Hash));
+            Console.WriteLine("SHA3-512: {0}", stringify(sha3Hash));
             Console.WriteLine("SpamSum: {0}", spamsumHash);
 
             fileStream.Close();

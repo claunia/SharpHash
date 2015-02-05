@@ -22,6 +22,7 @@
 using System.Text;
 using System.IO;
 using SHA3;
+using System;
 
 namespace SharpHash.Checksums
 {
@@ -30,14 +31,14 @@ namespace SharpHash.Checksums
     /// </summary>
     public class SHA3Context
     {
-        SHA3Unmanaged _sha3Provider;
+        SHA3WorkaroundForMono _sha3Provider;
 
         /// <summary>
         /// Initializes the SHA3 hash provider
         /// </summary>
         public void Init()
         {
-            _sha3Provider = new SHA3Unmanaged(512);
+            _sha3Provider = new SHA3WorkaroundForMono(512);
         }
 
         /// <summary>
@@ -64,7 +65,7 @@ namespace SharpHash.Checksums
         /// </summary>
         public byte[] Final()
         {
-            _sha3Provider.TransformFinalBlock(new byte[0], 0, 0);
+            _sha3Provider.WorkaroundTransformFinalBlock(new byte[0], 0, 0);
             return _sha3Provider.Hash;
         }
 
@@ -73,7 +74,7 @@ namespace SharpHash.Checksums
         /// </summary>
         public string End()
         {
-            _sha3Provider.TransformFinalBlock(new byte[0], 0, 0);
+            _sha3Provider.WorkaroundTransformFinalBlock(new byte[0], 0, 0);
             StringBuilder sha3Output = new StringBuilder();
 
             for (int i = 0; i < _sha3Provider.Hash.Length; i++)
@@ -140,6 +141,89 @@ namespace SharpHash.Checksums
         public string Data(byte[] data, out byte[] hash)
         {
             return Data(data, (uint)data.Length, out hash);
+        }
+    }
+
+    // This is a workaround for Mono
+    // Mono calls Initialize() on HashAlgorithm.cs, making SHA3.Hash be null
+    // .NET Framework does not
+    //
+    // This snippet then does detect if running under Mono, if so it is doing
+    // the same code, but without that call.
+    // Under .NET Framework, just calls base().
+    //
+    // Following snippet:
+    //
+    // System.Security.Cryptography.HashAlgorithm.cs
+    //
+    // Authors:
+    //  Matthew S. Ford (Matthew.S.Ford@Rose-Hulman.Edu)
+    //  Sebastien Pouliot (sebastien@ximian.com)
+    //
+    // Copyright 2001 by Matthew S. Ford.
+    // Portions (C) 2002 Motus Technologies Inc. (http://www.motus.com)
+    // Copyright (C) 2004-2006 Novell, Inc (http://www.novell.com)
+    //
+    // Permission is hereby granted, free of charge, to any person obtaining
+    // a copy of this software and associated documentation files (the
+    // "Software"), to deal in the Software without restriction, including
+    // without limitation the rights to use, copy, modify, merge, publish,
+    // distribute, sublicense, and/or sell copies of the Software, and to
+    // permit persons to whom the Software is furnished to do so, subject to
+    // the following conditions:
+    // 
+    // The above copyright notice and this permission notice shall be
+    // included in all copies or substantial portions of the Software.
+    // 
+    // THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+    // EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+    // MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+    // NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+    // LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+    // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+    // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+    //
+    public class SHA3WorkaroundForMono : SHA3Managed
+    {
+        public SHA3WorkaroundForMono(int hashBitLength) : base (hashBitLength)
+        { }
+
+        public byte[] WorkaroundTransformFinalBlock (byte[] inputBuffer, int inputOffset, int inputCount) 
+        {
+            // Check for Mono
+            Type t = Type.GetType ("Mono.Runtime");
+
+            // Not under Mono
+            if (t == null)
+            {
+                return base.TransformFinalBlock(inputBuffer, inputOffset, inputCount);
+            }
+            // Under Mono
+            else
+            {
+                if (inputBuffer == null)
+                    throw new ArgumentNullException("inputBuffer");
+                if (inputCount < 0)
+                    throw new ArgumentException("inputCount");
+                // ordered to avoid possible integer overflow
+                if (inputOffset > inputBuffer.Length - inputCount)
+                {
+                    throw new ArgumentException("inputOffset + inputCount", 
+                        "Overflow");
+                }
+
+                byte[] outputBuffer = new byte [inputCount];
+
+                // note: other exceptions are handled by Buffer.BlockCopy
+                Buffer.BlockCopy(inputBuffer, inputOffset, outputBuffer, 0, inputCount);
+
+                HashCore(inputBuffer, inputOffset, inputCount);
+                HashValue = HashFinal();
+                // Offending line
+                //Initialize ();
+
+                return outputBuffer;
+            }
         }
     }
 }
