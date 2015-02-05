@@ -24,6 +24,7 @@ using System.Reflection;
 using System.IO;
 using System.Text;
 using System.Diagnostics;
+using System.Threading;
 
 namespace SharpHash
 {
@@ -56,7 +57,7 @@ namespace SharpHash
             FileStream fileStream = new FileStream(args[0], FileMode.Open, FileAccess.Read);
 
             const Int64 bufferSize = 131072;
-            byte[] dataBuffer;
+            byte[] dataBuffer = new byte[bufferSize];
 
             Console.WriteLine("Checking for magic's file executable in path");
             bool thereIsMagic;
@@ -111,6 +112,21 @@ namespace SharpHash
                 mimeEncoding = magicProcess.StandardOutput.ReadToEnd();
                 magicProcess.WaitForExit();
             }
+
+            Thread tCRC16;
+            Thread tCRC32;
+            Thread tCRC64;
+            Thread tFletcher16;
+            Thread tFletcher32;
+            Thread tAdler32;
+            Thread tMD5;
+            Thread tRIPEMD160;
+            Thread tSHA1;
+            Thread tSHA256;
+            Thread tSHA384;
+            Thread tSHA512;
+            Thread tSHA3;
+            Thread tSpamSum;
 
             Console.WriteLine("Initializing CRC16...");
             Checksums.CRC16Context crc16Context = new Checksums.CRC16Context();
@@ -178,59 +194,342 @@ namespace SharpHash
                     Console.Write("\rHashing offset {0}", offset);
                     dataBuffer = new byte[bufferSize];
                     fileStream.Read(dataBuffer, 0, (int)bufferSize);
-                    crc16Context.Update(dataBuffer);
-                    crc32Context.Update(dataBuffer);
-                    crc64Context.Update(dataBuffer);
-                    fletcher16Context.Update(dataBuffer);
-                    fletcher32Context.Update(dataBuffer);
-                    adler32Context.Update(dataBuffer);
-                    md5Context.Update(dataBuffer);
-                    ripemd160Context.Update(dataBuffer);
-                    sha1Context.Update(dataBuffer);
-                    sha256Context.Update(dataBuffer);
-                    sha384Context.Update(dataBuffer);
-                    sha512Context.Update(dataBuffer);
-                    sha3Context.Update(dataBuffer);
-                    spamsumContext.Update(dataBuffer);
+
+                    // Initialize a thread per algorithm
+                    // TODO: Is there a way to reuse the threads? Start() fails if called more than one time
+                    tCRC16 = new Thread(delegate() {
+                        crc16Context.Update(dataBuffer);
+                    });
+                    tCRC16.IsBackground = true;
+                    tCRC16.Name = "CRC16";
+
+                    tCRC32 = new Thread(delegate() {
+                        crc32Context.Update(dataBuffer);
+                    });
+                    tCRC32.IsBackground = true;
+                    tCRC32.Name = "CRC32";
+
+                    tCRC64 = new Thread(delegate() {
+                        crc64Context.Update(dataBuffer);
+                    });
+                    tCRC64.IsBackground = true;
+                    tCRC64.Name = "CRC64";
+
+                    tFletcher16 = new Thread(delegate() {
+                        fletcher16Context.Update(dataBuffer);
+                    });
+                    tFletcher16.IsBackground = true;
+                    tFletcher16.Name = "CRC32";
+
+                    tFletcher32 = new Thread(delegate() {
+                        fletcher32Context.Update(dataBuffer);
+                    });
+                    tFletcher32.IsBackground = true;
+                    tFletcher32.Name = "CRC32";
+
+                    tAdler32 = new Thread(delegate() {
+                        adler32Context.Update(dataBuffer);
+                    });
+                    tAdler32.IsBackground = true;
+                    tAdler32.Name = "CRC32";
+
+                    tMD5 = new Thread(delegate() {
+                        md5Context.Update(dataBuffer);
+                    });
+                    tMD5.IsBackground = true;
+                    tMD5.Name = "CRC32";
+
+                    tRIPEMD160 = new Thread(delegate() {
+                        ripemd160Context.Update(dataBuffer);
+                    });
+                    tRIPEMD160.IsBackground = true;
+                    tRIPEMD160.Name = "CRC32";
+
+                    tSHA1 = new Thread(delegate() {
+                        sha1Context.Update(dataBuffer);
+                    });
+                    tSHA1.IsBackground = true;
+                    tSHA1.Name = "CRC32";
+
+                    tSHA256 = new Thread(delegate() {
+                        sha256Context.Update(dataBuffer);
+                    });
+                    tSHA256.IsBackground = true;
+                    tSHA256.Name = "CRC32";
+
+                    tSHA384 = new Thread(delegate() {
+                        sha384Context.Update(dataBuffer);
+                    });
+                    tSHA384.IsBackground = true;
+                    tSHA384.Name = "CRC32";
+
+                    tSHA512 = new Thread(delegate() {
+                        sha512Context.Update(dataBuffer);
+                    });
+                    tSHA512.IsBackground = true;
+                    tSHA512.Name = "CRC32";
+
+                    tSHA3 = new Thread(delegate() {
+                        sha3Context.Update(dataBuffer);
+                    });
+                    tSHA3.IsBackground = true;
+                    tSHA3.Name = "CRC32";
+
+                    tSpamSum = new Thread(delegate() {
+                        spamsumContext.Update(dataBuffer);
+                    });
+                    tSpamSum.IsBackground = true;
+                    tSpamSum.Name = "CRC32";
+
+                    // Start all algorithms
+                    tCRC16.Start();
+                    tCRC32.Start();
+                    tCRC64.Start();
+                    tFletcher16.Start();
+                    tFletcher32.Start();
+                    tAdler32.Start();
+                    tMD5.Start();
+                    tRIPEMD160.Start();
+                    tSHA1.Start();
+                    tSHA256.Start();
+                    tSHA384.Start();
+                    tSHA512.Start();
+                    tSHA3.Start();
+                    tSpamSum.Start();
+
+                    // Wait until all have finished
+                    while (tCRC16.IsAlive || tCRC32.IsAlive || tCRC64.IsAlive ||
+                        tFletcher16.IsAlive || tFletcher32.IsAlive || tAdler32.IsAlive ||
+                        tMD5.IsAlive || tRIPEMD160.IsAlive || tSHA1.IsAlive ||
+                        tSHA256.IsAlive || tSHA384.IsAlive || tSHA512.IsAlive ||
+                        tSHA3.IsAlive || tSpamSum.IsAlive);
                 }
 
                 dataBuffer = new byte[remainder];
 
-                fileStream.Read(dataBuffer, 0, (int)remainder);
-                crc16Context.Update(dataBuffer);
-                crc32Context.Update(dataBuffer);
-                crc64Context.Update(dataBuffer);
-                fletcher16Context.Update(dataBuffer);
-                fletcher32Context.Update(dataBuffer);
-                adler32Context.Update(dataBuffer);
-                md5Context.Update(dataBuffer);
-                ripemd160Context.Update(dataBuffer);
-                sha1Context.Update(dataBuffer);
-                sha256Context.Update(dataBuffer);
-                sha384Context.Update(dataBuffer);
-                sha512Context.Update(dataBuffer);
-                sha3Context.Update(dataBuffer);
-                spamsumContext.Update(dataBuffer);
+                // Initialize a thread per algorithm
+                // TODO: Is there a way to reuse the threads? Start() fails if called more than one time
+                tCRC16 = new Thread(delegate() {
+                    crc16Context.Update(dataBuffer);
+                });
+                tCRC16.IsBackground = true;
+                tCRC16.Name = "CRC16";
+
+                tCRC32 = new Thread(delegate() {
+                    crc32Context.Update(dataBuffer);
+                });
+                tCRC32.IsBackground = true;
+                tCRC32.Name = "CRC32";
+
+                tCRC64 = new Thread(delegate() {
+                    crc64Context.Update(dataBuffer);
+                });
+                tCRC64.IsBackground = true;
+                tCRC64.Name = "CRC64";
+
+                tFletcher16 = new Thread(delegate() {
+                    fletcher16Context.Update(dataBuffer);
+                });
+                tFletcher16.IsBackground = true;
+                tFletcher16.Name = "CRC32";
+
+                tFletcher32 = new Thread(delegate() {
+                    fletcher32Context.Update(dataBuffer);
+                });
+                tFletcher32.IsBackground = true;
+                tFletcher32.Name = "CRC32";
+
+                tAdler32 = new Thread(delegate() {
+                    adler32Context.Update(dataBuffer);
+                });
+                tAdler32.IsBackground = true;
+                tAdler32.Name = "CRC32";
+
+                tMD5 = new Thread(delegate() {
+                    md5Context.Update(dataBuffer);
+                });
+                tMD5.IsBackground = true;
+                tMD5.Name = "CRC32";
+
+                tRIPEMD160 = new Thread(delegate() {
+                    ripemd160Context.Update(dataBuffer);
+                });
+                tRIPEMD160.IsBackground = true;
+                tRIPEMD160.Name = "CRC32";
+
+                tSHA1 = new Thread(delegate() {
+                    sha1Context.Update(dataBuffer);
+                });
+                tSHA1.IsBackground = true;
+                tSHA1.Name = "CRC32";
+
+                tSHA256 = new Thread(delegate() {
+                    sha256Context.Update(dataBuffer);
+                });
+                tSHA256.IsBackground = true;
+                tSHA256.Name = "CRC32";
+
+                tSHA384 = new Thread(delegate() {
+                    sha384Context.Update(dataBuffer);
+                });
+                tSHA384.IsBackground = true;
+                tSHA384.Name = "CRC32";
+
+                tSHA512 = new Thread(delegate() {
+                    sha512Context.Update(dataBuffer);
+                });
+                tSHA512.IsBackground = true;
+                tSHA512.Name = "CRC32";
+
+                tSHA3 = new Thread(delegate() {
+                    sha3Context.Update(dataBuffer);
+                });
+                tSHA3.IsBackground = true;
+                tSHA3.Name = "CRC32";
+
+                tSpamSum = new Thread(delegate() {
+                    spamsumContext.Update(dataBuffer);
+                });
+                tSpamSum.IsBackground = true;
+                tSpamSum.Name = "CRC32";
+
+                // Start all algorithms
+                tCRC16.Start();
+                tCRC32.Start();
+                tCRC64.Start();
+                tFletcher16.Start();
+                tFletcher32.Start();
+                tAdler32.Start();
+                tMD5.Start();
+                tRIPEMD160.Start();
+                tSHA1.Start();
+                tSHA256.Start();
+                tSHA384.Start();
+                tSHA512.Start();
+                tSHA3.Start();
+                tSpamSum.Start();
+
+                // Wait until all have finished
+                while (tCRC16.IsAlive || tCRC32.IsAlive || tCRC64.IsAlive ||
+                    tFletcher16.IsAlive || tFletcher32.IsAlive || tAdler32.IsAlive ||
+                    tMD5.IsAlive || tRIPEMD160.IsAlive || tSHA1.IsAlive ||
+                    tSHA256.IsAlive || tSHA384.IsAlive || tSHA512.IsAlive ||
+                    tSHA3.IsAlive || tSpamSum.IsAlive);
             }
             else
             {
                 dataBuffer = new byte[fileStream.Length];
 
                 fileStream.Read(dataBuffer, 0, (int)fileStream.Length);
-                crc16Context.Update(dataBuffer);
-                crc32Context.Update(dataBuffer);
-                crc64Context.Update(dataBuffer);
-                fletcher16Context.Update(dataBuffer);
-                fletcher32Context.Update(dataBuffer);
-                adler32Context.Update(dataBuffer);
-                md5Context.Update(dataBuffer);
-                ripemd160Context.Update(dataBuffer);
-                sha1Context.Update(dataBuffer);
-                sha256Context.Update(dataBuffer);
-                sha384Context.Update(dataBuffer);
-                sha512Context.Update(dataBuffer);
-                sha3Context.Update(dataBuffer);
-                spamsumContext.Update(dataBuffer);
+
+                // Initialize a thread per algorithm
+                // TODO: Is there a way to reuse the threads? Start() fails if called more than one time
+                tCRC16 = new Thread(delegate() {
+                    crc16Context.Update(dataBuffer);
+                });
+                tCRC16.IsBackground = true;
+                tCRC16.Name = "CRC16";
+
+                tCRC32 = new Thread(delegate() {
+                    crc32Context.Update(dataBuffer);
+                });
+                tCRC32.IsBackground = true;
+                tCRC32.Name = "CRC32";
+
+                tCRC64 = new Thread(delegate() {
+                    crc64Context.Update(dataBuffer);
+                });
+                tCRC64.IsBackground = true;
+                tCRC64.Name = "CRC64";
+
+                tFletcher16 = new Thread(delegate() {
+                    fletcher16Context.Update(dataBuffer);
+                });
+                tFletcher16.IsBackground = true;
+                tFletcher16.Name = "CRC32";
+
+                tFletcher32 = new Thread(delegate() {
+                    fletcher32Context.Update(dataBuffer);
+                });
+                tFletcher32.IsBackground = true;
+                tFletcher32.Name = "CRC32";
+
+                tAdler32 = new Thread(delegate() {
+                    adler32Context.Update(dataBuffer);
+                });
+                tAdler32.IsBackground = true;
+                tAdler32.Name = "CRC32";
+
+                tMD5 = new Thread(delegate() {
+                    md5Context.Update(dataBuffer);
+                });
+                tMD5.IsBackground = true;
+                tMD5.Name = "CRC32";
+
+                tRIPEMD160 = new Thread(delegate() {
+                    ripemd160Context.Update(dataBuffer);
+                });
+                tRIPEMD160.IsBackground = true;
+                tRIPEMD160.Name = "CRC32";
+
+                tSHA1 = new Thread(delegate() {
+                    sha1Context.Update(dataBuffer);
+                });
+                tSHA1.IsBackground = true;
+                tSHA1.Name = "CRC32";
+
+                tSHA256 = new Thread(delegate() {
+                    sha256Context.Update(dataBuffer);
+                });
+                tSHA256.IsBackground = true;
+                tSHA256.Name = "CRC32";
+
+                tSHA384 = new Thread(delegate() {
+                    sha384Context.Update(dataBuffer);
+                });
+                tSHA384.IsBackground = true;
+                tSHA384.Name = "CRC32";
+
+                tSHA512 = new Thread(delegate() {
+                    sha512Context.Update(dataBuffer);
+                });
+                tSHA512.IsBackground = true;
+                tSHA512.Name = "CRC32";
+
+                tSHA3 = new Thread(delegate() {
+                    sha3Context.Update(dataBuffer);
+                });
+                tSHA3.IsBackground = true;
+                tSHA3.Name = "CRC32";
+
+                tSpamSum = new Thread(delegate() {
+                    spamsumContext.Update(dataBuffer);
+                });
+                tSpamSum.IsBackground = true;
+                tSpamSum.Name = "CRC32";
+
+                // Start all algorithms
+                tCRC16.Start();
+                tCRC32.Start();
+                tCRC64.Start();
+                tFletcher16.Start();
+                tFletcher32.Start();
+                tAdler32.Start();
+                tMD5.Start();
+                tRIPEMD160.Start();
+                tSHA1.Start();
+                tSHA256.Start();
+                tSHA384.Start();
+                tSHA512.Start();
+                tSHA3.Start();
+                tSpamSum.Start();
+
+                // Wait until all have finished
+                while (tCRC16.IsAlive || tCRC32.IsAlive || tCRC64.IsAlive ||
+                    tFletcher16.IsAlive || tFletcher32.IsAlive || tAdler32.IsAlive ||
+                    tMD5.IsAlive || tRIPEMD160.IsAlive || tSHA1.IsAlive ||
+                    tSHA256.IsAlive || tSHA384.IsAlive || tSHA512.IsAlive ||
+                    tSHA3.IsAlive || tSpamSum.IsAlive);
             }
 
             byte[] crc16Hash = crc16Context.Final();
