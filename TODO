@@ -1,5 +1,4 @@
 --- Check Fletcher-16 and Fletcher-32
 --- Implement Fletcher-64
 --- Implement other hashes
---- Check why SHA3 is not working
 
