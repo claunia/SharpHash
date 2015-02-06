@@ -223,87 +223,59 @@ namespace SharpHash
 
                     // Initialize a thread per algorithm
                     // TODO: Is there a way to reuse the threads? Start() fails if called more than one time
-                    tCRC16 = new Thread(delegate() {
-                        crc16Context.Update(dataBuffer);
-                    });
+                    tCRC16 = new Thread(() => crc16Context.Update(dataBuffer));
                     tCRC16.IsBackground = true;
                     tCRC16.Name = "CRC16";
 
-                    tCRC32 = new Thread(delegate() {
-                        crc32Context.Update(dataBuffer);
-                    });
+                    tCRC32 = new Thread(() => crc32Context.Update(dataBuffer));
                     tCRC32.IsBackground = true;
                     tCRC32.Name = "CRC32";
 
-                    tCRC64 = new Thread(delegate() {
-                        crc64Context.Update(dataBuffer);
-                    });
+                    tCRC64 = new Thread(() => crc64Context.Update(dataBuffer));
                     tCRC64.IsBackground = true;
                     tCRC64.Name = "CRC64";
 
-                    tFletcher16 = new Thread(delegate() {
-                        fletcher16Context.Update(dataBuffer);
-                    });
+                    tFletcher16 = new Thread(() => fletcher16Context.Update(dataBuffer));
                     tFletcher16.IsBackground = true;
                     tFletcher16.Name = "Fletcher-16";
 
-                    tFletcher32 = new Thread(delegate() {
-                        fletcher32Context.Update(dataBuffer);
-                    });
+                    tFletcher32 = new Thread(() => fletcher32Context.Update(dataBuffer));
                     tFletcher32.IsBackground = true;
                     tFletcher32.Name = "Fletcher-32";
 
-                    tAdler32 = new Thread(delegate() {
-                        adler32Context.Update(dataBuffer);
-                    });
+                    tAdler32 = new Thread(() => adler32Context.Update(dataBuffer));
                     tAdler32.IsBackground = true;
                     tAdler32.Name = "Adler-32";
 
-                    tMD5 = new Thread(delegate() {
-                        md5Context.Update(dataBuffer);
-                    });
+                    tMD5 = new Thread(() => md5Context.Update(dataBuffer));
                     tMD5.IsBackground = true;
                     tMD5.Name = "MD5";
 
-                    tRIPEMD160 = new Thread(delegate() {
-                        ripemd160Context.Update(dataBuffer);
-                    });
+                    tRIPEMD160 = new Thread(() => ripemd160Context.Update(dataBuffer));
                     tRIPEMD160.IsBackground = true;
                     tRIPEMD160.Name = "RIPEMD160";
 
-                    tSHA1 = new Thread(delegate() {
-                        sha1Context.Update(dataBuffer);
-                    });
+                    tSHA1 = new Thread(() => sha1Context.Update(dataBuffer));
                     tSHA1.IsBackground = true;
                     tSHA1.Name = "SHA1";
 
-                    tSHA256 = new Thread(delegate() {
-                        sha256Context.Update(dataBuffer);
-                    });
+                    tSHA256 = new Thread(() => sha256Context.Update(dataBuffer));
                     tSHA256.IsBackground = true;
                     tSHA256.Name = "SHA256";
 
-                    tSHA384 = new Thread(delegate() {
-                        sha384Context.Update(dataBuffer);
-                    });
+                    tSHA384 = new Thread(() => sha384Context.Update(dataBuffer));
                     tSHA384.IsBackground = true;
                     tSHA384.Name = "SHA384";
 
-                    tSHA512 = new Thread(delegate() {
-                        sha512Context.Update(dataBuffer);
-                    });
+                    tSHA512 = new Thread(() => sha512Context.Update(dataBuffer));
                     tSHA512.IsBackground = true;
                     tSHA512.Name = "SHA512";
 
-                    tSHA3 = new Thread(delegate() {
-                        sha3Context.Update(dataBuffer);
-                    });
+                    tSHA3 = new Thread(() => sha3Context.Update(dataBuffer));
                     tSHA3.IsBackground = true;
                     tSHA3.Name = "SHA3";
 
-                    tSpamSum = new Thread(delegate() {
-                        spamsumContext.Update(dataBuffer);
-                    });
+                    tSpamSum = new Thread(() => spamsumContext.Update(dataBuffer));
                     tSpamSum.IsBackground = true;
                     tSpamSum.Name = "SpamSum";
 
@@ -335,87 +307,59 @@ namespace SharpHash
 
                 // Initialize a thread per algorithm
                 // TODO: Is there a way to reuse the threads? Start() fails if called more than one time
-                tCRC16 = new Thread(delegate() {
-                    crc16Context.Update(dataBuffer);
-                });
+                tCRC16 = new Thread(() => crc16Context.Update(dataBuffer));
                 tCRC16.IsBackground = true;
                 tCRC16.Name = "CRC16";
 
-                tCRC32 = new Thread(delegate() {
-                    crc32Context.Update(dataBuffer);
-                });
+                tCRC32 = new Thread(() => crc32Context.Update(dataBuffer));
                 tCRC32.IsBackground = true;
                 tCRC32.Name = "CRC32";
 
-                tCRC64 = new Thread(delegate() {
-                    crc64Context.Update(dataBuffer);
-                });
+                tCRC64 = new Thread(() => crc64Context.Update(dataBuffer));
                 tCRC64.IsBackground = true;
                 tCRC64.Name = "CRC64";
 
-                tFletcher16 = new Thread(delegate() {
-                    fletcher16Context.Update(dataBuffer);
-                });
+                tFletcher16 = new Thread(() => fletcher16Context.Update(dataBuffer));
                 tFletcher16.IsBackground = true;
                 tFletcher16.Name = "Fletcher-16";
 
-                tFletcher32 = new Thread(delegate() {
-                    fletcher32Context.Update(dataBuffer);
-                });
+                tFletcher32 = new Thread(() => fletcher32Context.Update(dataBuffer));
                 tFletcher32.IsBackground = true;
                 tFletcher32.Name = "Fletcher-32";
 
-                tAdler32 = new Thread(delegate() {
-                    adler32Context.Update(dataBuffer);
-                });
+                tAdler32 = new Thread(() => adler32Context.Update(dataBuffer));
                 tAdler32.IsBackground = true;
                 tAdler32.Name = "Adler-32";
 
-                tMD5 = new Thread(delegate() {
-                    md5Context.Update(dataBuffer);
-                });
+                tMD5 = new Thread(() => md5Context.Update(dataBuffer));
                 tMD5.IsBackground = true;
                 tMD5.Name = "MD5";
 
-                tRIPEMD160 = new Thread(delegate() {
-                    ripemd160Context.Update(dataBuffer);
-                });
+                tRIPEMD160 = new Thread(() => ripemd160Context.Update(dataBuffer));
                 tRIPEMD160.IsBackground = true;
                 tRIPEMD160.Name = "RIPEMD160";
 
-                tSHA1 = new Thread(delegate() {
-                    sha1Context.Update(dataBuffer);
-                });
+                tSHA1 = new Thread(() => sha1Context.Update(dataBuffer));
                 tSHA1.IsBackground = true;
                 tSHA1.Name = "SHA1";
 
-                tSHA256 = new Thread(delegate() {
-                    sha256Context.Update(dataBuffer);
-                });
+                tSHA256 = new Thread(() => sha256Context.Update(dataBuffer));
                 tSHA256.IsBackground = true;
                 tSHA256.Name = "SHA256";
 
-                tSHA384 = new Thread(delegate() {
-                    sha384Context.Update(dataBuffer);
-                });
+                tSHA384 = new Thread(() => sha384Context.Update(dataBuffer));
                 tSHA384.IsBackground = true;
                 tSHA384.Name = "SHA384";
 
-                tSHA512 = new Thread(delegate() {
-                    sha512Context.Update(dataBuffer);
-                });
+                tSHA512 = new Thread(() => sha512Context.Update(dataBuffer));
                 tSHA512.IsBackground = true;
                 tSHA512.Name = "SHA512";
 
-                tSHA3 = new Thread(delegate() {
-                    sha3Context.Update(dataBuffer);
-                });
+                tSHA3 = new Thread(() => sha3Context.Update(dataBuffer));
                 tSHA3.IsBackground = true;
                 tSHA3.Name = "SHA3";
 
-                tSpamSum = new Thread(delegate() {
-                    spamsumContext.Update(dataBuffer);
-                });
+                tSpamSum = new Thread(() => spamsumContext.Update(dataBuffer));
                 tSpamSum.IsBackground = true;
                 tSpamSum.Name = "SpamSum";
 
@@ -450,87 +394,59 @@ namespace SharpHash
 
                 // Initialize a thread per algorithm
                 // TODO: Is there a way to reuse the threads? Start() fails if called more than one time
-                tCRC16 = new Thread(delegate() {
-                    crc16Context.Update(dataBuffer);
-                });
+                tCRC16 = new Thread(() => crc16Context.Update(dataBuffer));
                 tCRC16.IsBackground = true;
                 tCRC16.Name = "CRC16";
 
-                tCRC32 = new Thread(delegate() {
-                    crc32Context.Update(dataBuffer);
-                });
+                tCRC32 = new Thread(() => crc32Context.Update(dataBuffer));
                 tCRC32.IsBackground = true;
                 tCRC32.Name = "CRC32";
 
-                tCRC64 = new Thread(delegate() {
-                    crc64Context.Update(dataBuffer);
-                });
+                tCRC64 = new Thread(() => crc64Context.Update(dataBuffer));
                 tCRC64.IsBackground = true;
                 tCRC64.Name = "CRC64";
 
-                tFletcher16 = new Thread(delegate() {
-                    fletcher16Context.Update(dataBuffer);
-                });
+                tFletcher16 = new Thread(() => fletcher16Context.Update(dataBuffer));
                 tFletcher16.IsBackground = true;
                 tFletcher16.Name = "Fletcher-16";
 
-                tFletcher32 = new Thread(delegate() {
-                    fletcher32Context.Update(dataBuffer);
-                });
+                tFletcher32 = new Thread(() => fletcher32Context.Update(dataBuffer));
                 tFletcher32.IsBackground = true;
                 tFletcher32.Name = "Fletcher-32";
 
-                tAdler32 = new Thread(delegate() {
-                    adler32Context.Update(dataBuffer);
-                });
+                tAdler32 = new Thread(() => adler32Context.Update(dataBuffer));
                 tAdler32.IsBackground = true;
                 tAdler32.Name = "Adler-32";
 
-                tMD5 = new Thread(delegate() {
-                    md5Context.Update(dataBuffer);
-                });
+                tMD5 = new Thread(() => md5Context.Update(dataBuffer));
                 tMD5.IsBackground = true;
                 tMD5.Name = "MD5";
 
-                tRIPEMD160 = new Thread(delegate() {
-                    ripemd160Context.Update(dataBuffer);
-                });
+                tRIPEMD160 = new Thread(() => ripemd160Context.Update(dataBuffer));
                 tRIPEMD160.IsBackground = true;
                 tRIPEMD160.Name = "RIPEMD160";
 
-                tSHA1 = new Thread(delegate() {
-                    sha1Context.Update(dataBuffer);
-                });
+                tSHA1 = new Thread(() => sha1Context.Update(dataBuffer));
                 tSHA1.IsBackground = true;
                 tSHA1.Name = "SHA1";
 
-                tSHA256 = new Thread(delegate() {
-                    sha256Context.Update(dataBuffer);
-                });
+                tSHA256 = new Thread(() => sha256Context.Update(dataBuffer));
                 tSHA256.IsBackground = true;
                 tSHA256.Name = "SHA256";
 
-                tSHA384 = new Thread(delegate() {
-                    sha384Context.Update(dataBuffer);
-                });
+                tSHA384 = new Thread(() => sha384Context.Update(dataBuffer));
                 tSHA384.IsBackground = true;
                 tSHA384.Name = "SHA384";
 
-                tSHA512 = new Thread(delegate() {
-                    sha512Context.Update(dataBuffer);
-                });
+                tSHA512 = new Thread(() => sha512Context.Update(dataBuffer));
                 tSHA512.IsBackground = true;
                 tSHA512.Name = "SHA512";
 
-                tSHA3 = new Thread(delegate() {
-                    sha3Context.Update(dataBuffer);
-                });
+                tSHA3 = new Thread(() => sha3Context.Update(dataBuffer));
                 tSHA3.IsBackground = true;
                 tSHA3.Name = "SHA3";
 
-                tSpamSum = new Thread(delegate() {
-                    spamsumContext.Update(dataBuffer);
-                });
+                tSpamSum = new Thread(() => spamsumContext.Update(dataBuffer));
                 tSpamSum.IsBackground = true;
                 tSpamSum.Name = "SpamSum";
 
