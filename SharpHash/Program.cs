@@ -297,10 +297,12 @@ namespace SharpHash
 
                     // Wait until all have finished
                     while (tCRC16.IsAlive || tCRC32.IsAlive || tCRC64.IsAlive ||
-                        tFletcher16.IsAlive || tFletcher32.IsAlive || tAdler32.IsAlive ||
-                        tMD5.IsAlive || tRIPEMD160.IsAlive || tSHA1.IsAlive ||
-                        tSHA256.IsAlive || tSHA384.IsAlive || tSHA512.IsAlive ||
-                        tSHA3.IsAlive || tSpamSum.IsAlive);
+                           tFletcher16.IsAlive || tFletcher32.IsAlive || tAdler32.IsAlive ||
+                           tMD5.IsAlive || tRIPEMD160.IsAlive || tSHA1.IsAlive ||
+                           tSHA256.IsAlive || tSHA384.IsAlive || tSHA512.IsAlive ||
+                           tSHA3.IsAlive || tSpamSum.IsAlive)
+                    {
+                    }
                 }
 
                 dataBuffer = new byte[remainder];
@@ -381,10 +383,12 @@ namespace SharpHash
 
                 // Wait until all have finished
                 while (tCRC16.IsAlive || tCRC32.IsAlive || tCRC64.IsAlive ||
-                    tFletcher16.IsAlive || tFletcher32.IsAlive || tAdler32.IsAlive ||
-                    tMD5.IsAlive || tRIPEMD160.IsAlive || tSHA1.IsAlive ||
-                    tSHA256.IsAlive || tSHA384.IsAlive || tSHA512.IsAlive ||
-                    tSHA3.IsAlive || tSpamSum.IsAlive);
+                       tFletcher16.IsAlive || tFletcher32.IsAlive || tAdler32.IsAlive ||
+                       tMD5.IsAlive || tRIPEMD160.IsAlive || tSHA1.IsAlive ||
+                       tSHA256.IsAlive || tSHA384.IsAlive || tSHA512.IsAlive ||
+                       tSHA3.IsAlive || tSpamSum.IsAlive)
+                {
+                }
             }
             else
             {
@@ -468,10 +472,12 @@ namespace SharpHash
 
                 // Wait until all have finished
                 while (tCRC16.IsAlive || tCRC32.IsAlive || tCRC64.IsAlive ||
-                    tFletcher16.IsAlive || tFletcher32.IsAlive || tAdler32.IsAlive ||
-                    tMD5.IsAlive || tRIPEMD160.IsAlive || tSHA1.IsAlive ||
-                    tSHA256.IsAlive || tSHA384.IsAlive || tSHA512.IsAlive ||
-                    tSHA3.IsAlive || tSpamSum.IsAlive);
+                       tFletcher16.IsAlive || tFletcher32.IsAlive || tAdler32.IsAlive ||
+                       tMD5.IsAlive || tRIPEMD160.IsAlive || tSHA1.IsAlive ||
+                       tSHA256.IsAlive || tSHA384.IsAlive || tSHA512.IsAlive ||
+                       tSHA3.IsAlive || tSpamSum.IsAlive)
+                {
+                }
             }
 
             // Close the file asap
@@ -577,7 +583,7 @@ namespace SharpHash
                 if (uglyBytes.Length >= 2)
                 {
                     if ((uglyBytes[uglyBytes.Length - 1] == 0x0A && uglyBytes[uglyBytes.Length - 2] == 0x0D) ||
-                       (uglyBytes[uglyBytes.Length - 2] == 0x0A && uglyBytes[uglyBytes.Length - 1] == 0x0D))
+                        (uglyBytes[uglyBytes.Length - 2] == 0x0A && uglyBytes[uglyBytes.Length - 1] == 0x0D))
                     {
                         if (uglyBytes.Length == 2)
                             return null;
