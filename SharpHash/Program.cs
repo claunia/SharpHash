@@ -245,67 +245,67 @@ namespace SharpHash
                         fletcher16Context.Update(dataBuffer);
                     });
                     tFletcher16.IsBackground = true;
-                    tFletcher16.Name = "CRC32";
+                    tFletcher16.Name = "Fletcher-16";
 
                     tFletcher32 = new Thread(delegate() {
                         fletcher32Context.Update(dataBuffer);
                     });
                     tFletcher32.IsBackground = true;
-                    tFletcher32.Name = "CRC32";
+                    tFletcher32.Name = "Fletcher-32";
 
                     tAdler32 = new Thread(delegate() {
                         adler32Context.Update(dataBuffer);
                     });
                     tAdler32.IsBackground = true;
-                    tAdler32.Name = "CRC32";
+                    tAdler32.Name = "Adler-32";
 
                     tMD5 = new Thread(delegate() {
                         md5Context.Update(dataBuffer);
                     });
                     tMD5.IsBackground = true;
-                    tMD5.Name = "CRC32";
+                    tMD5.Name = "MD5";
 
                     tRIPEMD160 = new Thread(delegate() {
                         ripemd160Context.Update(dataBuffer);
                     });
                     tRIPEMD160.IsBackground = true;
-                    tRIPEMD160.Name = "CRC32";
+                    tRIPEMD160.Name = "RIPEMD160";
 
                     tSHA1 = new Thread(delegate() {
                         sha1Context.Update(dataBuffer);
                     });
                     tSHA1.IsBackground = true;
-                    tSHA1.Name = "CRC32";
+                    tSHA1.Name = "SHA1";
 
                     tSHA256 = new Thread(delegate() {
                         sha256Context.Update(dataBuffer);
                     });
                     tSHA256.IsBackground = true;
-                    tSHA256.Name = "CRC32";
+                    tSHA256.Name = "SHA256";
 
                     tSHA384 = new Thread(delegate() {
                         sha384Context.Update(dataBuffer);
                     });
                     tSHA384.IsBackground = true;
-                    tSHA384.Name = "CRC32";
+                    tSHA384.Name = "SHA384";
 
                     tSHA512 = new Thread(delegate() {
                         sha512Context.Update(dataBuffer);
                     });
                     tSHA512.IsBackground = true;
-                    tSHA512.Name = "CRC32";
+                    tSHA512.Name = "SHA512";
 
                     tSHA3 = new Thread(delegate() {
                         sha3Context.Update(dataBuffer);
                     });
                     tSHA3.IsBackground = true;
-                    tSHA3.Name = "CRC32";
+                    tSHA3.Name = "SHA3";
 
                     tSpamSum = new Thread(delegate() {
                         spamsumContext.Update(dataBuffer);
                     });
                     tSpamSum.IsBackground = true;
-                    tSpamSum.Name = "CRC32";
+                    tSpamSum.Name = "SpamSum";
 
                     // Start all algorithms
                     tCRC16.Start();
@@ -357,67 +357,67 @@ namespace SharpHash
                     fletcher16Context.Update(dataBuffer);
                 });
                 tFletcher16.IsBackground = true;
-                tFletcher16.Name = "CRC32";
+                tFletcher16.Name = "Fletcher-16";
 
                 tFletcher32 = new Thread(delegate() {
                     fletcher32Context.Update(dataBuffer);
                 });
                 tFletcher32.IsBackground = true;
-                tFletcher32.Name = "CRC32";
+                tFletcher32.Name = "Fletcher-32";
 
                 tAdler32 = new Thread(delegate() {
                     adler32Context.Update(dataBuffer);
                 });
                 tAdler32.IsBackground = true;
-                tAdler32.Name = "CRC32";
+                tAdler32.Name = "Adler-32";
 
                 tMD5 = new Thread(delegate() {
                     md5Context.Update(dataBuffer);
                 });
                 tMD5.IsBackground = true;
-                tMD5.Name = "CRC32";
+                tMD5.Name = "MD5";
 
                 tRIPEMD160 = new Thread(delegate() {
                     ripemd160Context.Update(dataBuffer);
                 });
                 tRIPEMD160.IsBackground = true;
-                tRIPEMD160.Name = "CRC32";
+                tRIPEMD160.Name = "RIPEMD160";
 
                 tSHA1 = new Thread(delegate() {
                     sha1Context.Update(dataBuffer);
                 });
                 tSHA1.IsBackground = true;
-                tSHA1.Name = "CRC32";
+                tSHA1.Name = "SHA1";
 
                 tSHA256 = new Thread(delegate() {
                     sha256Context.Update(dataBuffer);
                 });
                 tSHA256.IsBackground = true;
-                tSHA256.Name = "CRC32";
+                tSHA256.Name = "SHA256";
 
                 tSHA384 = new Thread(delegate() {
                     sha384Context.Update(dataBuffer);
                 });
                 tSHA384.IsBackground = true;
-                tSHA384.Name = "CRC32";
+                tSHA384.Name = "SHA384";
 
                 tSHA512 = new Thread(delegate() {
                     sha512Context.Update(dataBuffer);
                 });
                 tSHA512.IsBackground = true;
-                tSHA512.Name = "CRC32";
+                tSHA512.Name = "SHA512";
 
                 tSHA3 = new Thread(delegate() {
                     sha3Context.Update(dataBuffer);
                 });
                 tSHA3.IsBackground = true;
-                tSHA3.Name = "CRC32";
+                tSHA3.Name = "SHA3";
 
                 tSpamSum = new Thread(delegate() {
                     spamsumContext.Update(dataBuffer);
                 });
                 tSpamSum.IsBackground = true;
-                tSpamSum.Name = "CRC32";
+                tSpamSum.Name = "SpamSum";
 
                 // Start all algorithms
                 tCRC16.Start();
@@ -472,67 +472,67 @@ namespace SharpHash
                     fletcher16Context.Update(dataBuffer);
                 });
                 tFletcher16.IsBackground = true;
-                tFletcher16.Name = "CRC32";
+                tFletcher16.Name = "Fletcher-16";
 
                 tFletcher32 = new Thread(delegate() {
                     fletcher32Context.Update(dataBuffer);
                 });
                 tFletcher32.IsBackground = true;
-                tFletcher32.Name = "CRC32";
+                tFletcher32.Name = "Fletcher-32";
 
                 tAdler32 = new Thread(delegate() {
                     adler32Context.Update(dataBuffer);
                 });
                 tAdler32.IsBackground = true;
-                tAdler32.Name = "CRC32";
+                tAdler32.Name = "Adler-32";
 
                 tMD5 = new Thread(delegate() {
                     md5Context.Update(dataBuffer);
                 });
                 tMD5.IsBackground = true;
-                tMD5.Name = "CRC32";
+                tMD5.Name = "MD5";
 
                 tRIPEMD160 = new Thread(delegate() {
                     ripemd160Context.Update(dataBuffer);
                 });
                 tRIPEMD160.IsBackground = true;
-                tRIPEMD160.Name = "CRC32";
+                tRIPEMD160.Name = "RIPEMD160";
 
                 tSHA1 = new Thread(delegate() {
                     sha1Context.Update(dataBuffer);
                 });
                 tSHA1.IsBackground = true;
-                tSHA1.Name = "CRC32";
+                tSHA1.Name = "SHA1";
 
                 tSHA256 = new Thread(delegate() {
                     sha256Context.Update(dataBuffer);
                 });
                 tSHA256.IsBackground = true;
-                tSHA256.Name = "CRC32";
+                tSHA256.Name = "SHA256";
 
                 tSHA384 = new Thread(delegate() {
                     sha384Context.Update(dataBuffer);
                 });
                 tSHA384.IsBackground = true;
-                tSHA384.Name = "CRC32";
+                tSHA384.Name = "SHA384";
 
                 tSHA512 = new Thread(delegate() {
                     sha512Context.Update(dataBuffer);
                 });
                 tSHA512.IsBackground = true;
-                tSHA512.Name = "CRC32";
+                tSHA512.Name = "SHA512";
 
                 tSHA3 = new Thread(delegate() {
                     sha3Context.Update(dataBuffer);
                 });
                 tSHA3.IsBackground = true;
-                tSHA3.Name = "CRC32";
+                tSHA3.Name = "SHA3";
 
                 tSpamSum = new Thread(delegate() {
                     spamsumContext.Update(dataBuffer);
                 });
                 tSpamSum.IsBackground = true;
-                tSpamSum.Name = "CRC32";
+                tSpamSum.Name = "SpamSum";
 
                 // Start all algorithms
                 tCRC16.Start();
