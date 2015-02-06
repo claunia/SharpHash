@@ -442,7 +442,7 @@ namespace SharpHash.Checksums
             byte[] result;
             fuzzy_digest(out result);
 
-            return Encoding.ASCII.GetString(result);
+            return CToString(result);
         }
 
         /// <summary>
@@ -483,7 +483,7 @@ namespace SharpHash.Checksums
             byte[] result;
             fuzzy_digest(out result);
 
-            return Encoding.ASCII.GetString(result);
+            return CToString(result);
         }
 
         /// <summary>
@@ -494,6 +494,22 @@ namespace SharpHash.Checksums
         public string Data(byte[] data, out byte[] hash)
         {
             return Data(data, (uint)data.Length, out hash);
+        }
+
+        // Converts an ASCII null-terminated string to .NET string
+        private string CToString(byte[] CString)
+        {
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < CString.Length; i++)
+            {
+                if (CString[i] == 0)
+                    break;
+
+                sb.Append(Encoding.ASCII.GetString(CString, i, 1));
+            }
+
+            return sb.ToString();
         }
     }
 }
