@@ -435,7 +435,7 @@ namespace SharpHash.Checksums
         }
 
         /// <summary>
-        /// Returns a hexadecimal representation of the hash value.
+        /// Returns a base64 representation of the hash value.
         /// </summary>
         public string End()
         {
@@ -471,7 +471,8 @@ namespace SharpHash.Checksums
         /// </summary>
         /// <param name="data">Data buffer.</param>
         /// <param name="len">Length of the data buffer to hash.</param>
-        /// <param name="hash">Byte array of the hash value.</param>
+        /// <param name="hash">null</param>
+        /// <returns>Base64 representation of SpamSum $blocksize:$hash:$hash</returns>
         public string Data(byte[] data, uint len, out byte[] hash)
         {
             SpamSumContext fuzzyContext = new SpamSumContext();
@@ -490,7 +491,8 @@ namespace SharpHash.Checksums
         /// Gets the hash of the specified data buffer.
         /// </summary>
         /// <param name="data">Data buffer.</param>
-        /// <param name="hash">Byte array of the hash value.</param>
+        /// <param name="hash">null</param>
+        /// <returns>Base64 representation of SpamSum $blocksize:$hash:$hash</returns>
         public string Data(byte[] data, out byte[] hash)
         {
             return Data(data, (uint)data.Length, out hash);

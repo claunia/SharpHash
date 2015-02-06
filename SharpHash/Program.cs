@@ -32,6 +32,7 @@ namespace SharpHash
     {
         public static void Main(string[] args)
         {
+            // Gets assembly information to create application output header
             object[] attributes = typeof(MainClass).Assembly.GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
             string AssemblyTitle = ((AssemblyTitleAttribute)attributes[0]).Title;
             attributes = typeof(MainClass).Assembly.GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
@@ -45,6 +46,7 @@ namespace SharpHash
             string filename;
             bool outputXml;
 
+            // Checks arguments
             if (args.Length == 2 && args[0] == "--xml")
             {
                 filename = args[1];
@@ -69,6 +71,7 @@ namespace SharpHash
 
             FileHash fh = new FileHash();
 
+            // Gets filesystem information
             fh.atime = fi.LastAccessTimeUtc;
             fh.attributes = fi.Attributes;
             fh.ctime = fi.CreationTimeUtc;
@@ -77,12 +80,14 @@ namespace SharpHash
             fh.name = fi.Name;
             fh.path = Path.GetDirectoryName(fi.FullName);
 
+            // Sets a 128Kbyte buffer
             const Int64 bufferSize = 131072;
             byte[] dataBuffer = new byte[bufferSize];
 
             Console.WriteLine("Checking for magic's file executable in path");
             bool thereIsMagic;
 
+            // Try's to execute "file", to see if magic is installed in path
             try
             {
                 Process p = new Process();
@@ -103,6 +108,7 @@ namespace SharpHash
                 Console.WriteLine("magic's file not found in path");
             }
 
+            // If it is installed, calls it to get information about file
             if (thereIsMagic)
             {
                 Process magicProcess = new Process();
@@ -132,6 +138,7 @@ namespace SharpHash
                 magicProcess.WaitForExit();
             }
 
+            // Threads
             Thread tCRC16;
             Thread tCRC32;
             Thread tCRC64;
@@ -551,8 +558,10 @@ namespace SharpHash
                     tSHA3.IsAlive || tSpamSum.IsAlive);
             }
 
+            // Close the file asap
             fileStream.Close();
 
+            // Gets final step of algorithms
             fh.crc16 = crc16Context.Final();
             fh.crc32 = crc32Context.Final();
             fh.crc64 = crc64Context.Final();
@@ -568,6 +577,7 @@ namespace SharpHash
             fh.sha3 = sha3Context.Final();
             fh.spamsum = spamsumContext.End();
 
+            // If first argument is "--xml", outputs XML of information to stdout
             if (outputXml)
             {
                 Console.WriteLine();
@@ -575,6 +585,7 @@ namespace SharpHash
                 fhSerializer.Serialize(Console.Out, fh);
                 Console.WriteLine();
             }
+            // If not, use a human output
             else
             {
                 Console.WriteLine();
@@ -610,6 +621,10 @@ namespace SharpHash
             }
         }
 
+        /// <summary>
+        /// Returns a hexadecimal representation, lowercase, of a byte array. Endian agnostic, translates byte-by-byte
+        /// </summary>
+        /// <param name="hash">Hash.</param>
         static string stringify(byte[] hash)
         {
             StringBuilder hashOutput = new StringBuilder();
