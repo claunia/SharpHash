@@ -42,19 +42,40 @@ namespace SharpHash
             Console.WriteLine("{0}", AssemblyCopyright);
             Console.WriteLine();
 
-            if (args.Length != 1)
+            string filename;
+            bool outputXml;
+
+            if (args.Length == 2 && args[0] == "--xml")
+            {
+                filename = args[1];
+                outputXml = true;
+            }
+            else if (args.Length != 1)
             {
                 Console.WriteLine("Please specify file to hash.");
                 return;
             }
+            else
+                filename = args[0];
 
-            if (!File.Exists(args[0]))
+            if (!File.Exists(filename))
             {
                 Console.WriteLine("Specified file cannot be found.");
                 return;
             }
 
-            FileStream fileStream = new FileStream(args[0], FileMode.Open, FileAccess.Read);
+            FileStream fileStream = new FileStream(filename, FileMode.Open, FileAccess.Read);
+            FileInfo fi = new FileInfo(filename);
+
+            FileHash fh = new FileHash();
+
+            fh.atime = fi.LastAccessTimeUtc;
+            fh.attributes = fi.Attributes;
+            fh.ctime = fi.CreationTimeUtc;
+            fh.length = fi.Length;
+            fh.mtime = fi.LastWriteTimeUtc;
+            fh.name = fi.Name;
+            fh.path = Path.GetDirectoryName(fi.FullName);
 
             const Int64 bufferSize = 131072;
             byte[] dataBuffer = new byte[bufferSize];
@@ -82,8 +103,6 @@ namespace SharpHash
                 Console.WriteLine("magic's file not found in path");
             }
 
-            string magic = "", applePair = "", mimeType = "", mimeEncoding = "";
-
             if (thereIsMagic)
             {
                 Process magicProcess = new Process();
@@ -92,24 +111,24 @@ namespace SharpHash
                 magicProcess.StartInfo.RedirectStandardError = true;
                 magicProcess.StartInfo.FileName = "file";
 
-                magicProcess.StartInfo.Arguments = "--brief --preserve-date " + args[0];
+                magicProcess.StartInfo.Arguments = "--brief --preserve-date " + filename;
                 magicProcess.Start();
-                magic = magicProcess.StandardOutput.ReadToEnd();
+                fh.magic = magicProcess.StandardOutput.ReadToEnd();
                 magicProcess.WaitForExit();
 
-                magicProcess.StartInfo.Arguments = "--brief --preserve-date --apple " + args[0];
+                magicProcess.StartInfo.Arguments = "--brief --preserve-date --apple " + filename;
                 magicProcess.Start();
-                applePair = magicProcess.StandardOutput.ReadToEnd();
+                fh.applePair = magicProcess.StandardOutput.ReadToEnd();
                 magicProcess.WaitForExit();
 
-                magicProcess.StartInfo.Arguments = "--brief --preserve-date --mime-type " + args[0];
+                magicProcess.StartInfo.Arguments = "--brief --preserve-date --mime-type " + filename;
                 magicProcess.Start();
-                mimeType = magicProcess.StandardOutput.ReadToEnd();
+                fh.mimeType = magicProcess.StandardOutput.ReadToEnd();
                 magicProcess.WaitForExit();
 
-                magicProcess.StartInfo.Arguments = "--brief --preserve-date --mime-encoding " + args[0];
+                magicProcess.StartInfo.Arguments = "--brief --preserve-date --mime-encoding " + filename;
                 magicProcess.Start();
-                mimeEncoding = magicProcess.StandardOutput.ReadToEnd();
+                fh.mimeEncoding = magicProcess.StandardOutput.ReadToEnd();
                 magicProcess.WaitForExit();
             }
 
@@ -532,47 +551,64 @@ namespace SharpHash
                     tSHA3.IsAlive || tSpamSum.IsAlive);
             }
 
-            byte[] crc16Hash = crc16Context.Final();
-            byte[] crc32Hash = crc32Context.Final();
-            byte[] crc64Hash = crc64Context.Final();
-            byte[] fletcher16Hash = fletcher16Context.Final();
-            byte[] fletcher32Hash = fletcher32Context.Final();
-            byte[] adler32Hash = adler32Context.Final();
-            byte[] md5Hash = md5Context.Final();
-            byte[] ripemd160Hash = ripemd160Context.Final();
-            byte[] sha1Hash = sha1Context.Final();
-            byte[] sha256Hash = sha256Context.Final();
-            byte[] sha384Hash = sha384Context.Final();
-            byte[] sha512Hash = sha512Context.Final();
-            byte[] sha3Hash = sha3Context.Final();
-            string spamsumHash = spamsumContext.End();
+            fileStream.Close();
 
-            Console.WriteLine();
-            Console.WriteLine();
-            if (thereIsMagic)
+            fh.crc16 = crc16Context.Final();
+            fh.crc32 = crc32Context.Final();
+            fh.crc64 = crc64Context.Final();
+            fh.fletcher16 = fletcher16Context.Final();
+            fh.fletcher32 = fletcher32Context.Final();
+            fh.adler32 = adler32Context.Final();
+            fh.md5 = md5Context.Final();
+            fh.ripemd160 = ripemd160Context.Final();
+            fh.sha1 = sha1Context.Final();
+            fh.sha256 = sha256Context.Final();
+            fh.sha384 = sha384Context.Final();
+            fh.sha512 = sha512Context.Final();
+            fh.sha3 = sha3Context.Final();
+            fh.spamsum = spamsumContext.End();
+
+            if (outputXml)
             {
-                Console.Write("magic's Description = {0}", magic);
-                Console.Write("Apple OSType Pair = {0}", applePair);
-                Console.Write("MIME Type = {0}", mimeType);
-                Console.Write("MIME Encoding = {0}", mimeEncoding);
+                Console.WriteLine();
+                System.Xml.Serialization.XmlSerializer fhSerializer = new System.Xml.Serialization.XmlSerializer(fh.GetType());
+                fhSerializer.Serialize(Console.Out, fh);
                 Console.WriteLine();
             }
-            Console.WriteLine("CRC16: {0}", stringify(crc16Hash));
-            Console.WriteLine("CRC32: {0}", stringify(crc32Hash));
-            Console.WriteLine("CRC64: {0}", stringify(crc64Hash));
-            Console.WriteLine("Fletcher-16: {0}", stringify(fletcher16Hash));
-            Console.WriteLine("Fletcher-32: {0}", stringify(fletcher32Hash));
-            Console.WriteLine("Adler-32: {0}", stringify(adler32Hash));
-            Console.WriteLine("MD5: {0}", stringify(md5Hash));
-            Console.WriteLine("RIPEMD160: {0}", stringify(ripemd160Hash));
-            Console.WriteLine("SHA1: {0}", stringify(sha1Hash));
-            Console.WriteLine("SHA2-256: {0}", stringify(sha256Hash));
-            Console.WriteLine("SHA2-384: {0}", stringify(sha384Hash));
-            Console.WriteLine("SHA2-512: {0}", stringify(sha512Hash));
-            Console.WriteLine("SHA3-512: {0}", stringify(sha3Hash));
-            Console.WriteLine("SpamSum: {0}", spamsumHash);
-
-            fileStream.Close();
+            else
+            {
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("File name: {0}", fh.name);
+                Console.WriteLine("File path: {0}", fh.path);
+                Console.WriteLine("File length: {0}", fh.length);
+                Console.WriteLine("File attributes: {0}", fh.attributes);
+                Console.WriteLine("File creation time: {0}", fh.ctime);
+                Console.WriteLine("File last modification time: {0}", fh.mtime);
+                Console.WriteLine("File last access time: {0}", fh.atime);
+                if (thereIsMagic)
+                {
+                    Console.Write("magic's Description = {0}", fh.magic);
+                    Console.Write("Apple OSType Pair = {0}", fh.applePair);
+                    Console.Write("MIME Type = {0}", fh.mimeType);
+                    Console.Write("MIME Encoding = {0}", fh.mimeEncoding);
+                    Console.WriteLine();
+                }
+                Console.WriteLine("CRC16: {0}", stringify(fh.crc16));
+                Console.WriteLine("CRC32: {0}", stringify(fh.crc32));
+                Console.WriteLine("CRC64: {0}", stringify(fh.crc64));
+                Console.WriteLine("Fletcher-16: {0}", stringify(fh.fletcher16));
+                Console.WriteLine("Fletcher-32: {0}", stringify(fh.fletcher32));
+                Console.WriteLine("Adler-32: {0}", stringify(fh.adler32));
+                Console.WriteLine("MD5: {0}", stringify(fh.md5));
+                Console.WriteLine("RIPEMD160: {0}", stringify(fh.ripemd160));
+                Console.WriteLine("SHA1: {0}", stringify(fh.sha1));
+                Console.WriteLine("SHA2-256: {0}", stringify(fh.sha256));
+                Console.WriteLine("SHA2-384: {0}", stringify(fh.sha384));
+                Console.WriteLine("SHA2-512: {0}", stringify(fh.sha512));
+                Console.WriteLine("SHA3-512: {0}", stringify(fh.sha3));
+                Console.WriteLine("SpamSum: {0}", fh.spamsum);
+            }
         }
 
         static string stringify(byte[] hash)

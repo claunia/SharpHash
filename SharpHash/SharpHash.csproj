@@ -34,6 +34,8 @@
     <Reference Include="SHA3Managed">
       <HintPath>..\packages\SHA3.0.9.2\lib\net40\SHA3Managed.dll</HintPath>
     </Reference>
+    <Reference Include="System.Xml.Serialization" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Program.cs" />
@@ -52,6 +54,7 @@
     <Compile Include="Checksums\FletcherContext.cs" />
     <Compile Include="Checksums\Adler32Context.cs" />
     <Compile Include="Checksums\SpamSumContext.cs" />
+    <Compile Include="FileHash.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
