@@ -113,22 +113,22 @@ namespace SharpHash
 
                 magicProcess.StartInfo.Arguments = "--brief --preserve-date " + filename;
                 magicProcess.Start();
-                fh.magic = magicProcess.StandardOutput.ReadToEnd();
+                fh.magic = correctTrailingNewLine(magicProcess.StandardOutput.ReadToEnd());
                 magicProcess.WaitForExit();
 
                 magicProcess.StartInfo.Arguments = "--brief --preserve-date --apple " + filename;
                 magicProcess.Start();
-                fh.applePair = magicProcess.StandardOutput.ReadToEnd();
+                fh.applePair = correctTrailingNewLine(magicProcess.StandardOutput.ReadToEnd());
                 magicProcess.WaitForExit();
 
                 magicProcess.StartInfo.Arguments = "--brief --preserve-date --mime-type " + filename;
                 magicProcess.Start();
-                fh.mimeType = magicProcess.StandardOutput.ReadToEnd();
+                fh.mimeType = correctTrailingNewLine(magicProcess.StandardOutput.ReadToEnd());
                 magicProcess.WaitForExit();
 
                 magicProcess.StartInfo.Arguments = "--brief --preserve-date --mime-encoding " + filename;
                 magicProcess.Start();
-                fh.mimeEncoding = magicProcess.StandardOutput.ReadToEnd();
+                fh.mimeEncoding = correctTrailingNewLine(magicProcess.StandardOutput.ReadToEnd());
                 magicProcess.WaitForExit();
             }
 
@@ -588,11 +588,10 @@ namespace SharpHash
                 Console.WriteLine("File last access time: {0}", fh.atime);
                 if (thereIsMagic)
                 {
-                    Console.Write("magic's Description = {0}", fh.magic);
-                    Console.Write("Apple OSType Pair = {0}", fh.applePair);
-                    Console.Write("MIME Type = {0}", fh.mimeType);
-                    Console.Write("MIME Encoding = {0}", fh.mimeEncoding);
-                    Console.WriteLine();
+                    Console.WriteLine("magic's Description = {0}", fh.magic);
+                    Console.WriteLine("Apple OSType Pair = {0}", fh.applePair);
+                    Console.WriteLine("MIME Type = {0}", fh.mimeType);
+                    Console.WriteLine("MIME Encoding = {0}", fh.mimeEncoding);
                 }
                 Console.WriteLine("CRC16: {0}", stringify(fh.crc16));
                 Console.WriteLine("CRC32: {0}", stringify(fh.crc32));
@@ -621,6 +620,49 @@ namespace SharpHash
             }
 
             return hashOutput.ToString();
+        }
+
+        /// <summary>
+        /// Remove trailing new lines (Mac, Win, UNIX and Acorn formats) from a string, as magic stdout are trailed.
+        /// </summary>
+        /// <returns>Corrected string. Null if original string is onle a newline</returns>
+        /// <param name="uglyString">String that may have a trailing newline</param>
+        static string correctTrailingNewLine(string uglyString)
+        {
+            byte[] uglyBytes = Encoding.UTF8.GetBytes(uglyString);
+            byte[] prettyBytes;
+
+            if (uglyBytes == null)
+                return null;
+
+            if (uglyBytes.Length == 0)
+                return null;
+
+            if (uglyBytes[uglyBytes.Length - 1] == 0x0A || uglyBytes[uglyBytes.Length - 1] == 0x0D)
+            {
+                if (uglyBytes.Length == 1)
+                    return null;
+
+                if (uglyBytes.Length >= 2)
+                {
+                    if ((uglyBytes[uglyBytes.Length - 1] == 0x0A && uglyBytes[uglyBytes.Length - 2] == 0x0D) ||
+                       (uglyBytes[uglyBytes.Length - 2] == 0x0A && uglyBytes[uglyBytes.Length - 1] == 0x0D))
+                    {
+                        if (uglyBytes.Length == 2)
+                            return null;
+
+                        prettyBytes = new byte[uglyBytes.Length - 2];
+                        Array.Copy(uglyBytes, 0, prettyBytes, 0, uglyBytes.Length - 2);
+                        return Encoding.UTF8.GetString(prettyBytes);
+                    }
+                }
+
+                prettyBytes = new byte[uglyBytes.Length - 1];
+                Array.Copy(uglyBytes, 0, prettyBytes, 0, uglyBytes.Length - 1);
+                return Encoding.UTF8.GetString(prettyBytes);
+            }
+
+            return uglyString;
         }
     }
 }
